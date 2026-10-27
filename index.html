@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reclamos de obras · Buscador</title><meta name="description" content="Busque reclamos de obras por formulario, municipio, tarea, dirección o descripción y ubique su GPS.">
+<meta name="theme-color" content="#0b4656"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/style.css"></head>
+<body><header class="hero"><div class="hero-in"><div><h1>Reclamos de obras</h1><p>Busque, ubique en el mapa y comparta cada reclamo.</p></div>
+<div class="acts"><button class="ib" id="inst" hidden>Instalar</button><button class="ib" id="thm" aria-label="Cambiar tema claro u oscuro">Tema</button></div></div></header>
+<main id="v-buscar"><div class="search"><div class="sbox"><input id="q" type="search" placeholder="Escriba aquí: n.º de formulario, calle, palabra del reclamo…" aria-label="Buscar" autocomplete="off">
+<select id="sc" aria-label="Buscar en"><option value="all">Buscar en todo</option><option value="n">N.º de formulario</option><option value="m">Municipio</option><option value="t">Tarea</option><option value="a">Dirección</option><option value="x">Descripción del reclamo</option></select></div>
+<div class="chips" id="chM" role="group" aria-label="Municipio"></div>
+<div class="filters"><label>Tarea<select id="ft"></select></label><label>Estado<select id="fe"><option value="">Todos</option><option value="1">Resueltos</option><option value="0">Pendientes</option></select></label><label>Año<select id="fy"></select></label><label>Ubicación<select id="fg"><option value="">Todas</option><option value="1">Con GPS</option><option value="0">Sin GPS</option></select></label><label>&nbsp;<button class="chip" id="rs" style="padding:9px 12px">Limpiar filtros</button></label></div></div>
+<div class="kpis"><div class="k"><b id="k0">0</b><span>reclamos encontrados</span></div><div class="k ok"><b id="k1">0</b><span>resueltos</span></div><div class="k pe"><b id="k2">0</b><span>pendientes</span></div><div class="k"><b id="k3">0</b><span>con ubicación GPS</span></div></div>
+<button class="btn wa sendall" id="waall" hidden>Enviar resultados por WhatsApp</button><div class="bars" id="bars" aria-label="Reclamos por municipio"></div>
+<div id="list"></div><button class="chip more" id="more" hidden>Mostrar más resultados</button></main>
+<main id="v-panel" hidden><div id="pn"></div></main>
+<nav class="tabs" aria-label="Secciones"><button data-go="buscar" aria-current="page">Buscar</button><button data-go="panel" aria-current="false">Panel</button></nav>
+<script src="data/reclamos.js"></script><script src="js/app.js"></script><script src="js/extra.js"></script></body></html>
