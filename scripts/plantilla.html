@@ -1,0 +1,99 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Buscador de reclamos de obras</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0ec;--card:#fff;--ink:#1d2a2e;--mut:#5d6b70;--line:#d6dbd6;--ac:#0f5c6e;--acf:#fff;--ok:#2c7a4b;--okb:#dff0e5;--pe:#b8431f;--peb:#fbe6df;--mk:#ffe58a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#12181b;--card:#1b2428;--ink:#e6ecec;--mut:#9aa9ad;--line:#2e3b40;--ac:#5cc0d6;--acf:#0b1d22;--ok:#6fd08f;--okb:#1e3a2a;--pe:#ff9a7a;--peb:#432720;--mk:#6b5a10}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#12181b;--card:#1b2428;--ink:#e6ecec;--mut:#9aa9ad;--line:#2e3b40;--ac:#5cc0d6;--acf:#0b1d22;--ok:#6fd08f;--okb:#1e3a2a;--pe:#ff9a7a;--peb:#432720;--mk:#6b5a10}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:980px;margin:0 auto;padding:16px 14px 48px}
+h1{font-size:21px;margin:2px 0 2px;letter-spacing:-.01em}.sub{color:var(--mut);font-size:13px;margin:0 0 14px}
+.search{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:8px 0 10px}
+.sbox{display:flex;gap:8px;flex-wrap:wrap}
+input[type=search]{flex:1 1 260px;font:inherit;padding:12px 14px;border:2px solid var(--ink);border-radius:10px;background:var(--card);color:var(--ink);min-width:0}
+select{font:inherit;padding:10px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);max-width:100%}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{font:inherit;font-size:13px;padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ac);color:var(--acf);border-color:var(--ac);font-weight:700}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.filters label{font-size:12px;color:var(--mut);display:flex;flex-direction:column;gap:2px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.k{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px}.k b{font-size:22px;display:block;line-height:1.1}.k span{font-size:12px;color:var(--mut)}
+.k.ok b{color:var(--ok)}.k.pe b{color:var(--pe)}
+.bars{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:12px}
+.bar{display:grid;grid-template-columns:96px 1fr 44px;gap:8px;align-items:center;font-size:13px;width:100%;background:none;border:0;color:inherit;font-family:inherit;padding:3px 0;cursor:pointer;text-align:left}
+.bar .tr{height:12px;background:var(--line);border-radius:6px;overflow:hidden;display:flex}.bar .o{background:var(--ok)}.bar .p{background:repeating-linear-gradient(45deg,var(--pe) 0 3px,var(--peb) 3px 6px)}
+.bar[aria-pressed=true]{font-weight:700}.bar span:last-child{text-align:right}
+.item{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:6px;overflow:hidden}
+.item[data-r="1"]{border-left:6px solid var(--ok)}.item[data-r="0"]{border-left:6px solid var(--pe)}
+.head{display:grid;grid-template-columns:118px 1fr auto;gap:4px 12px;align-items:center;width:100%;text-align:left;font:inherit;color:inherit;background:none;border:0;padding:10px 12px;cursor:pointer}
+.num{font-weight:700;font-variant-numeric:tabular-nums;font-size:13px}.meta{font-size:12px;color:var(--mut)}.addr{font-weight:500}
+.tag{font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;white-space:nowrap}.tag.ok{background:var(--okb);color:var(--ok)}.tag.pe{background:var(--peb);color:var(--pe)}
+.det{display:none;border-top:1px dashed var(--line);padding:10px 12px 12px}.item.open .det{display:block}
+dl{margin:0;display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:14px}dt{color:var(--mut);font-size:13px}dd{margin:0;overflow-wrap:anywhere}
+.gps{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.btn{font:inherit;font-weight:700;font-size:14px;padding:9px 14px;border-radius:9px;border:2px solid var(--ac);background:var(--ac);color:var(--acf);text-decoration:none;cursor:pointer}.btn.s{background:none;color:var(--ac)}
+.nog{font-size:13px;color:var(--pe);font-weight:500}
+mark{background:var(--mk);color:inherit;border-radius:3px;padding:0 1px}
+.btn.wa{background:var(--ok);border-color:var(--ok);color:var(--acf)}.share{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.share input{flex:0 1 220px;font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);min-width:0}
+.more{display:block;margin:12px auto;font:inherit;padding:10px 20px}.empty{text-align:center;color:var(--mut);padding:30px 10px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+@media(max-width:620px){.head{grid-template-columns:1fr auto}.kpis{grid-template-columns:repeat(2,1fr)}dl{grid-template-columns:1fr}dt{margin-top:4px}.bar{grid-template-columns:84px 1fr 40px}}
+@media(prefers-reduced-motion:no-preference){.item.open .det{animation:o .18s ease-out}@keyframes o{from{opacity:0;transform:translateY(-4px)}}}
+</style></head><body><main>
+<div class="top"><div><h1>Buscador de reclamos de obras</h1><p class="sub">Busque por n.º de formulario, municipio, tarea, dirección o descripción. Abra un reclamo para ver todos sus datos y su ubicación GPS.</p></div></div>
+<div class="search"><div class="sbox"><input id="q" type="search" placeholder="Escriba aquí: n.º de formulario, calle, palabra del reclamo…" aria-label="Buscar" autocomplete="off">
+<select id="sc" aria-label="Buscar en"><option value="all">Buscar en todo</option><option value="n">N.º de formulario</option><option value="m">Municipio</option><option value="t">Tarea</option><option value="a">Dirección</option><option value="x">Descripción del reclamo</option></select></div>
+<div class="chips" id="chM" role="group" aria-label="Municipio"></div>
+<div class="filters"><label>Tarea<select id="ft"></select></label><label>Estado<select id="fe"><option value="">Todos</option><option value="1">Resueltos</option><option value="0">Pendientes</option></select></label><label>Año<select id="fy"></select></label><label>Ubicación<select id="fg"><option value="">Todas</option><option value="1">Con GPS</option><option value="0">Sin GPS</option></select></label><label>&nbsp;<button class="chip" id="rs" style="padding:9px 12px">Limpiar filtros</button></label></div></div>
+<div class="kpis"><div class="k"><b id="k0">0</b><span>reclamos encontrados</span></div><div class="k ok"><b id="k1">0</b><span>resueltos</span></div><div class="k pe"><b id="k2">0</b><span>pendientes</span></div><div class="k"><b id="k3">0</b><span>con ubicación GPS</span></div></div>
+<div class="share"><input id="ph" type="tel" inputmode="tel" placeholder="Número (opcional) ej. 59899123456" aria-label="Número de WhatsApp, opcional"><a class="btn wa" id="wa" data-wa="all" href="#" target="_blank" rel="noopener noreferrer">Enviar resultados por WhatsApp</a></div>
+<div class="bars" id="bars" aria-label="Reclamos por municipio"></div>
+<div id="list"></div><button class="chip more" id="more" hidden>Mostrar más resultados</button>
+</main>
+<script>
+const D=__DATA__;
+const $=i=>document.getElementById(i);
+const nz=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+D.forEach(z=>{z.y=z.d.slice(0,4)||'s/f';z.h={n:nz(z.n),m:nz(z.m),t:nz(z.t),a:nz(z.a+' '+z.e+' '+z.b),x:nz(z.x+' '+z.k)};z.h.all=Object.values(z.h).join(' ')});
+const MUN=['Las Piedras','La Paz','18 de Mayo','Progreso'];
+const ESC=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let st={m:'',q:'',sc:'all',t:'',e:'',y:'',g:''},shown=60,open=new Set();
+function opts(el,vals,all){el.innerHTML=`<option value="">${all}</option>`+vals.map(v=>`<option>${ESC(v)}</option>`).join('')}
+const cnt=k=>[...D.reduce((m,z)=>m.set(z[k],(m.get(z[k])||0)+1),new Map())].sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+opts($('ft'),cnt('t'),'Todas');opts($('fy'),[...new Set(D.map(z=>z.y))].sort().reverse(),'Todos');
+const others=cnt('m').filter(m=>!MUN.includes(m));
+$('chM').innerHTML=['Todos',...MUN,...others].map(m=>`<button class="chip" data-m="${m==='Todos'?'':ESC(m)}" aria-pressed="false">${m==='Todos'?'Todos los municipios':ESC(m)}</button>`).join('');
+const fd=d=>d?d.split('-').reverse().join('/'):'Sin fecha';
+function hl(txt,terms){let s=ESC(txt);if(!terms.length)return s;const re=new RegExp('('+terms.map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')','gi');
+ // accent-insensitive highlight over plain text
+ const n=nz(txt);if(n.length!==txt.length)return s;let o='',i=0;const ms=[...n.matchAll(re)];if(!ms.length)return s;
+ for(const m of ms){o+=ESC(txt.slice(i,m.index))+'<mark>'+ESC(txt.slice(m.index,m.index+m[0].length))+'</mark>';i=m.index+m[0].length}return o+ESC(txt.slice(i))}
+function filt(skipM){const terms=nz(st.q).split(/\s+/).filter(Boolean);
+ return {terms,res:D.filter(z=>(skipM||!st.m||z.m===st.m)&&(!st.t||z.t===st.t)&&(st.e===''||z.r==st.e)&&(!st.y||z.y===st.y)&&(st.g===''||(st.g==='1'?z.g:!z.g))&&terms.every(w=>z.h[st.sc].includes(w)))}}
+function render(){const {terms,res}=filt(false),base=filt(true).res;
+ $('k0').textContent=res.length;const r=res.filter(z=>z.r).length;$('k1').textContent=r;$('k2').textContent=res.length-r;$('k3').textContent=res.filter(z=>z.g).length;
+ const ms=[...new Set(base.map(z=>z.m))].sort((a,b)=>base.filter(z=>z.m===b).length-base.filter(z=>z.m===a).length),mx=Math.max(1,...ms.map(m=>base.filter(z=>z.m===m).length));
+ $('bars').innerHTML=ms.map(m=>{const a=base.filter(z=>z.m===m),o=a.filter(z=>z.r).length;return `<button class="bar" data-m="${ESC(m)}" aria-pressed="${st.m===m}"><span>${ESC(m)}</span><span class="tr" style="width:${a.length/mx*100}%"><i class="o" style="width:${o/a.length*100}%"></i><i class="p" style="flex:1"></i></span><span>${a.length}</span></button>`}).join('')+'<div class="meta" style="margin-top:4px">Verde sólido: resueltos · rayado: pendientes. Toque un municipio para filtrar.</div>';
+ document.querySelectorAll('#chM .chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.m===st.m));
+ const v=res.slice(0,shown);
+ $('list').innerHTML=v.length?v.map((z,i)=>{const id=z.n+'|'+z.d,o=open.has(id);return `<div class="item${o?' open':''}" data-r="${z.r}" data-id="${ESC(id)}"><button class="head" aria-expanded="${o}"><span class="num">${hl(z.n,terms)}<br><span class="meta">${fd(z.d)}</span></span><span><span class="addr">${hl(z.a||'Sin dirección',terms)}</span><br><span class="meta">${hl(z.m,terms)} · ${hl(z.t,terms)}</span></span><span class="tag ${z.r?'ok':'pe'}">${z.r?'Resuelto':'Pendiente'}</span></button>
+ <div class="det"><dl><dt>N.º de formulario</dt><dd>${ESC(z.n)}</dd><dt>Fecha</dt><dd>${fd(z.d)}</dd><dt>Municipio</dt><dd>${ESC(z.m)}</dd><dt>Barrio</dt><dd>${ESC(z.b)||'—'}</dd><dt>Tarea</dt><dd>${ESC(z.t)} (${z.r?'resuelto':'pendiente'})</dd><dt>Dirección</dt><dd>${ESC(z.a)||'—'}</dd><dt>Entre calles</dt><dd>${ESC(z.e)||'—'}</dd><dt>Tipo de reclamo</dt><dd>${ESC(z.k)||'—'}</dd><dt>Descripción</dt><dd>${hl(z.x||'—',terms)}</dd></dl>
+ <div class="gps">${z.g?`<a class="btn" href="${ESC(z.g)}" target="_blank" rel="noopener noreferrer">Ver ubicación en Google Maps</a><button class="btn s" data-copy="${ESC(z.g)}">Copiar enlace GPS</button>`:`<span class="nog">Sin ubicación GPS${z.gn?': '+ESC(z.gn):''}</span>`}<a class="btn wa" data-wa="${ESC(id)}" href="#" target="_blank" rel="noopener noreferrer">Enviar este reclamo por WhatsApp</a></div></div></div>`}).join(''):'<div class="empty">No hay reclamos con esos criterios. Pruebe con menos palabras o toque «Limpiar filtros».</div>';
+ $('more').hidden=res.length<=shown;$('more').textContent=`Mostrar más resultados (${res.length-shown} restantes)`}
+const li=z=>`*${z.n}* · ${z.m} · ${z.t} (${z.r?'Resuelto':'Pendiente'})\n${z.a||'Sin dirección'}${z.x?'\n'+z.x.slice(0,150):''}${z.g?'\n📍 '+z.g:''}`;
+const waU=(txt)=>`https://wa.me/${$('ph').value.replace(/\D/g,'')}?text=${encodeURIComponent(txt)}`;
+function waAll(){const {res}=filt(false),r=res.filter(z=>z.r).length;const f=[st.q&&`Búsqueda “${st.q}” (${$('sc').selectedOptions[0].text})`,st.m,st.t,st.e!==''&&(st.e==='1'?'Resueltos':'Pendientes'),st.y].filter(Boolean).join(' · ')||'sin filtros';
+ const head=`*Reclamos de obras* – ${f}\n${res.length} resultados (${r} resueltos, ${res.length-r} pendientes)\n`;let n=Math.min(res.length,10),txt;
+ do{txt=head+'\n'+res.slice(0,n).map(li).join('\n\n')+(res.length>n?`\n\n… y ${res.length-n} más`:'');n--}while(encodeURIComponent(txt).length>3500&&n>0);return txt}
+let tm;$('q').addEventListener('input',e=>{clearTimeout(tm);tm=setTimeout(()=>{st.q=e.target.value;shown=60;render()},150)});
+$('sc').onchange=e=>{st.sc=e.target.value;shown=60;render()};
+[['ft','t'],['fe','e'],['fy','y'],['fg','g']].forEach(([i,k])=>$(i).onchange=e=>{st[k]=e.target.value;shown=60;render()});
+$('rs').onclick=()=>{st={m:'',q:'',sc:'all',t:'',e:'',y:'',g:''};$('q').value='';$('sc').value='all';['ft','fe','fy','fg'].forEach(i=>$(i).value='');shown=60;render()};
+$('more').onclick=()=>{shown+=60;render()};
+document.addEventListener('click',e=>{const w=e.target.closest('a[data-wa]');if(w){const k=w.dataset.wa;w.href=waU(k==='all'?waAll():li(D.find(z=>z.n+'|'+z.d===k)));return}
+ const c=e.target.closest('[data-m]');if(c){st.m=st.m===c.dataset.m?'':c.dataset.m;shown=60;render();return}
+ const h=e.target.closest('.head');if(h){const it=h.parentElement,id=it.dataset.id;it.classList.toggle('open');h.setAttribute('aria-expanded',it.classList.contains('open'));it.classList.contains('open')?open.add(id):open.delete(id);return}
+ const cp=e.target.closest('[data-copy]');if(cp){try{navigator.clipboard.writeText(cp.dataset.copy).then(()=>{cp.textContent='Enlace copiado'}).catch(()=>{cp.textContent=cp.dataset.copy})}catch(_){cp.textContent=cp.dataset.copy}}});
+render();
+</script></body></html>
